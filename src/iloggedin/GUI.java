@@ -1,4 +1,4 @@
-package iloggedin.github;
+package iloggedin;
 
 import javax.swing.*;
 import java.awt.*;
