@@ -1,6 +1,13 @@
 package iloggedin;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
 import java.awt.*;
 
 public class GUI extends JFrame {
@@ -16,13 +23,30 @@ public class GUI extends JFrame {
         JFrame frame = new JFrame("Notes");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
+        frame.setLayout(new BorderLayout());
 
         //Creating the MenuBar and adding components
         JMenuBar mb = new JMenuBar();
         JMenu m1 = new JMenu("File");
-        JMenu m2 = new JMenu("Help");
+        JMenu m2 = new JMenu("Edit");
+        JMenu m3 = new JMenu("Format");
+        JMenu m4 = new JMenu("View");
+        JMenu m5 = new JMenu("help");
         mb.add(m1);
         mb.add(m2);
+        mb.add(m3);
+        mb.add(m4);
+        mb.add(m5);
+        JPanel statusPanel = new JPanel();
+        statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        frame.add(statusPanel, BorderLayout.SOUTH);
+        statusPanel.setPreferredSize(new Dimension(frame.getWidth(), 16));
+        statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
+        JLabel statusLabel = new JLabel("status");
+        statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        statusPanel.add(statusLabel);
+
+
         JMenuItem open = new JMenuItem("Open");
         open.addActionListener(openAs);
         JMenuItem save = new JMenuItem("Save As");
@@ -32,21 +56,39 @@ public class GUI extends JFrame {
         m1.add(save);
         m2.add(commands);
         JPanel panel = new JPanel();
-        JLabel label = new JLabel("Enter text");
-        //adding text field and all the buttons it comes with
-        JTextField tf = new JTextField();
-        JButton send = new JButton("Send");
-        JButton reset = new JButton("Reset");
-        panel.add(label);
-        panel.add(tf);
-        panel.add(send);
-        panel.add(reset);
-        //reset and send logic (I feel like putting em here as they're just one line really
-        reset.addActionListener(e -> tf.setText(""));
-        send.addActionListener(e -> ta.append(tf.getText() + "\n"));
+
+        JPanel statusBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        statusBar.setBorder(new CompoundBorder(new LineBorder(Color.DARK_GRAY), new EmptyBorder(5, 6, 6, 6)));
+        final JLabel status = new JLabel();
+
+        String text = ta.getText();
+        status.setText("Characters: " + text.length());
+        String[] words = text.split(" ");
+        status.setText("Words: "+ words.length);
+
+        ta.getDocument().addDocumentListener(new DocumentListener() {
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                update();
+            }
+
+            public void insertUpdate(DocumentEvent e) {
+                update();
+            }
+
+            public void update() {
+                status.setText("Characters: " + ta.getText().length());
+            }
+        });
+        statusBar.add(status);
+
         frame.getContentPane().add(BorderLayout.SOUTH, panel);
         frame.getContentPane().add(BorderLayout.NORTH, mb);
         frame.getContentPane().add(BorderLayout.CENTER, ta);
+        frame.getContentPane().add(BorderLayout.SOUTH, statusBar);
         frame.setVisible(true);
     }
 }
