@@ -4,5 +4,6 @@
 /dataSources/
 /dataSources.local.xml
 *.iml
+/out/production/
 
 

@@ -5,19 +5,24 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
 import java.awt.*;
 
 public class GUI extends JFrame {
-    JTextArea ta = new JTextArea();
+
+    Open openAs;
+    Counters counters;
     Save saveAs;
-    Open openAs = new Open(this);
 
     public GUI() {
         saveAs = new Save(this);
+        counters = new Counters(this);
+        openAs = new Open(this);
     }
+    JTextArea ta = new JTextArea();
+    JSeparator separator = new JSeparator(SwingConstants.VERTICAL);
+
+    JPanel statusBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
     public void graphicalUser(){
         //Creating the Frame
         JFrame frame = new JFrame("Notes");
@@ -57,33 +62,8 @@ public class GUI extends JFrame {
         m2.add(commands);
         JPanel panel = new JPanel();
 
-        JPanel statusBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
         statusBar.setBorder(new CompoundBorder(new LineBorder(Color.DARK_GRAY), new EmptyBorder(5, 6, 6, 6)));
-        final JLabel status = new JLabel();
-
-        String text = ta.getText();
-        status.setText("Characters: " + text.length());
-        String[] words = text.split(" ");
-        status.setText("Words: "+ words.length);
-
-        ta.getDocument().addDocumentListener(new DocumentListener() {
-            public void changedUpdate(DocumentEvent e) {
-                update();
-            }
-
-            public void removeUpdate(DocumentEvent e) {
-                update();
-            }
-
-            public void insertUpdate(DocumentEvent e) {
-                update();
-            }
-
-            public void update() {
-                status.setText("Characters: " + ta.getText().length());
-            }
-        });
-        statusBar.add(status);
+        counters.Charcounter();
 
         frame.getContentPane().add(BorderLayout.SOUTH, panel);
         frame.getContentPane().add(BorderLayout.NORTH, mb);

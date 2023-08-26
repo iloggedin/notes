@@ -13,8 +13,6 @@ public class Open implements ActionListener {
     public Open(GUI parentGUI){
         guiMain = parentGUI;
     }
-
-
     @Override
     public void actionPerformed(ActionEvent e) {
         JFileChooser c = new JFileChooser();
