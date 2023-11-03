@@ -1,31 +1,35 @@
 package iloggedin;
 
+
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Element;
 import java.awt.*;
 
 public class GUI extends JFrame {
-
     Open openAs;
-    Counters counters;
+    StatusLine statusLine;
     Save saveAs;
+    private static JTextArea lines;
+
 
     public GUI() {
         saveAs = new Save(this);
-        counters = new Counters(this);
+        statusLine = new StatusLine(this);
         openAs = new Open(this);
     }
     JTextArea ta = new JTextArea();
-    JSeparator separator = new JSeparator(SwingConstants.VERTICAL);
-
     JPanel statusBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    JFrame frame = new JFrame("Notes");
 
     public void graphicalUser(){
         //Creating the Frame
-        JFrame frame = new JFrame("Notes");
+        JPanel statusPanel = new JPanel();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 400);
         frame.setLayout(new BorderLayout());
@@ -42,12 +46,11 @@ public class GUI extends JFrame {
         mb.add(m3);
         mb.add(m4);
         mb.add(m5);
-        JPanel statusPanel = new JPanel();
         statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
         frame.add(statusPanel, BorderLayout.SOUTH);
         statusPanel.setPreferredSize(new Dimension(frame.getWidth(), 16));
         statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
-        JLabel statusLabel = new JLabel("status");
+        JLabel statusLabel = new JLabel();
         statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
         statusPanel.add(statusLabel);
 
@@ -60,15 +63,49 @@ public class GUI extends JFrame {
         m1.add(open);
         m1.add(save);
         m2.add(commands);
-        JPanel panel = new JPanel();
 
-        statusBar.setBorder(new CompoundBorder(new LineBorder(Color.DARK_GRAY), new EmptyBorder(5, 6, 6, 6)));
-        counters.Charcounter();
+        statusBar.setBorder(new CompoundBorder(new LineBorder(Color.DARK_GRAY), new EmptyBorder(5, 6, 6, 2)));
+        statusLine.Charcounter();
 
-        frame.getContentPane().add(BorderLayout.SOUTH, panel);
         frame.getContentPane().add(BorderLayout.NORTH, mb);
         frame.getContentPane().add(BorderLayout.CENTER, ta);
         frame.getContentPane().add(BorderLayout.SOUTH, statusBar);
         frame.setVisible(true);
+    }
+    public void createAndShowGUI(){
+        JScrollPane jsp = new JScrollPane();
+        lines = new JTextArea("1");
+        lines.setEditable(false);
+        ta.getDocument().addDocumentListener(new DocumentListener()    {
+            public String getText(){
+                int caretPosition = ta.getDocument().getLength();
+                Element root = ta.getDocument().getDefaultRootElement();
+                StringBuilder text = new StringBuilder("1" + System.getProperty("line.separator"));
+                for(int i = 2; i < root.getElementIndex(caretPosition) + 2; i++){
+                    text.append(i).append(System.getProperty("line.separator"));
+                }
+                return text.toString();
+            }
+            @Override
+            public void changedUpdate(DocumentEvent de) {
+                lines.setText(getText());
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent de) {
+                lines.setText(getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent de) {
+                lines.setText(getText());
+            }
+
+        });
+
+        jsp.getViewport().add(ta);
+        jsp.setRowHeaderView(lines);
+        jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        frame.getContentPane().add(jsp);
     }
 }

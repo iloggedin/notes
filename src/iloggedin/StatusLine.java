@@ -1,18 +1,18 @@
 package iloggedin;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-public class Counters {
+public class StatusLine extends JFrame {
     GUI guiMain;
-    public Counters(GUI parentGUI){
+
+    public StatusLine(GUI parentGUI){
         guiMain = parentGUI;
     }
-
     public void Charcounter(){
         final JLabel chars = new JLabel();
         JLabel words = new JLabel();
+        JLabel line = new JLabel();
         words.setText("Words: ");
         chars.setText("Characters: ");
         guiMain.ta.getDocument().addDocumentListener(new DocumentListener() {
@@ -31,9 +31,10 @@ public class Counters {
             chars.setText("Characters: " + guiMain.ta.getText().replace(" ", "").length());
             words.setText("words: " + guiMain.ta.getText().split("\\s+").length);
             guiMain.statusBar.add(chars);
-            guiMain.statusBar.add(guiMain.separator);
             guiMain.statusBar.add(words);
+            guiMain.statusBar.add(line);
         }
-    });
+        });
+
 }
-}
+    }

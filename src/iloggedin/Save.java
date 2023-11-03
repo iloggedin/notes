@@ -30,7 +30,7 @@ public class Save implements ActionListener{
                 file = new File(file.getParentFile(), file.getName() + ".txt");
             }
             try {
-                guiMain.ta.write(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
+                    guiMain.ta.write(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
                 Desktop.getDesktop().open(file);
             } catch (Exception x) {
                 x.printStackTrace();
